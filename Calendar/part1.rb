@@ -1,7 +1,7 @@
 require 'date'
 require 'io/console'
 
-days7 = %w[sun mon tue wed thu fri sat]
+days7 = %w[ sun  mon  tue  wed  thu  fri  sat]
 
 def get_today_info
 	time = Time.new
@@ -15,7 +15,6 @@ end
 def get_days_in_month(month,year) 
 	time = Date.new(year,month,-1)
     no_of_days = time.day
-    #puts time
     return no_of_days
 
 end
@@ -24,6 +23,30 @@ def get_weekday(month,year,dayx)
 	x = Date.new(year,month,dayx)
 	dayp = x.wday
 	return dayp
+end
+
+def get_previous_month(month,year)
+	if month <= 1
+		p_month = 12
+		p_year = year - 1
+		return [p_month,p_year]
+	else
+		p_month = month - 1
+		p_year = year
+		return [p_month,p_year]
+	end
+end
+
+def get_next_month(month,year)
+	if month >= 12
+		p_month = 1
+		p_year = year + 1
+		return [p_month,p_year]
+	else
+		p_month = month + 1
+		p_year = year 
+		return [p_month,p_year]
+	end
 end
 
 $weekdays = {
@@ -40,6 +63,16 @@ $weekdays = {
 def create_calendar(month,year,day_format,last_day)
 	$day = 1
 	$month_array = Array.new(7){Array.new(6)}
+
+	#part 2 update
+	temp = get_previous_month(month,year)
+	last_month = temp[0]
+	last_month_year = temp[1]
+	last_month_day = get_days_in_month(last_month,last_month_year)
+
+	last_month_count = (day_format - get_weekday(month,year,$day)).abs
+
+	next_month_count = 1
 	
 
 	for i in 0..5
@@ -47,13 +80,22 @@ def create_calendar(month,year,day_format,last_day)
 			if $day <= last_day
 				if ((j+day_format)%7) == get_weekday(month,year,$day)
 					if $day < 10
-						$month_array[i][j] = "  "+$day.to_s
+						$month_array[i][j] = "  "+$day.to_s+" "
 					else
-						$month_array[i][j] = " "+$day.to_s
+						$month_array[i][j] = " "+$day.to_s+" "
 					end
 					$day = $day + 1
 				else
-					$month_array[i][j] = "   "
+					$month_array[i][j] = " "+(last_month_day - last_month_count+1).to_s+"*"
+					last_month_count = last_month_count-1
+				end
+			else
+				if next_month_count < 10
+					$month_array[i][j] =  "  "+next_month_count.to_s+"*"
+					next_month_count = next_month_count + 1
+				else
+					$month_array[i][j] =  " "+next_month_count.to_s+"*"
+					next_month_count = next_month_count + 1
 				end
 			end
 		end
@@ -62,7 +104,7 @@ def create_calendar(month,year,day_format,last_day)
 end
 
 def headers_dispaly(weekday,start)
-	puts(weekday[start%7]+ " "+weekday[(start+1)%7]+ " "+weekday[(start+2)%7]+ " "+weekday[(start+3)%7]+ " "+weekday[(start+4)%7]+ " "+weekday[(start+5)%7]+ " "+weekday[(start+6)%7])
+	puts(" "+weekday[start%7]+ "  "+weekday[(start+1)%7]+ "  "+weekday[(start+2)%7]+ "  "+weekday[(start+3)%7]+ "  "+weekday[(start+4)%7]+ "  "+weekday[(start+5)%7]+ "  "+weekday[(start+6)%7])
 end
 
 def display_calendar(x,weekday,start_day)
@@ -98,21 +140,18 @@ while $x != 'q' do
 		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
 		$x = STDIN.getch
 	elsif $x.eql?"p"
-		
-		$today[1] = $today[1] - 1
-		if $today[1] <= 0
-			$today[1] = 12
-			$today[2] = $today[2] - 1
-		end
+	
+		temp = get_previous_month($today[1],$today[2])
+		$today[1] = temp[0]
+		$today[2] = temp[1]
+
 		last_day = get_days_in_month($today[1],$today[2])
 		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
 		$x = STDIN.getch
 	elsif $x.eql?"n"
-		$today[1] = $today[1] + 1
-		if $today[1] >= 13
-			$today[1] = 1
-			$today[2] = $today[2] + 1
-		end
+		temp = get_next_month($today[1],$today[2])
+		$today[1] = temp[0]
+		$today[2] = temp[1]
 		
 		last_day = get_days_in_month($today[1],$today[2])
 		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
