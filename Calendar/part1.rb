@@ -1,4 +1,5 @@
 require 'date'
+require 'io/console'
 
 days7 = %w[sun mon tue wed thu fri sat]
 
@@ -38,10 +39,10 @@ $weekdays = {
 
 def create_calendar(month,year,day_format,last_day)
 	$day = 1
-	$month_array = Array.new(7){Array.new(5)}
+	$month_array = Array.new(7){Array.new(6)}
 	
 
-	for i in 0..4
+	for i in 0..5
 		for j in 0..6
 			if $day <= last_day
 				if ((j+day_format)%7) == get_weekday(month,year,$day)
@@ -70,11 +71,58 @@ def display_calendar(x,weekday,start_day)
 	
 	puts "\n"
 
-	for i in 0..4
+	for i in 0..6
 	
 		puts x[i].join(' ')
 	
 	end
 end
 
-display_calendar(create_calendar(7,2015,0,31),days7,0)
+
+
+$x = '1'
+$day_from = 0
+$today = get_today_info
+
+while $x != 'q' do
+	
+	puts("\n")
+	puts("To go to next month press N\n")
+	puts("To go to previous month press P\n")
+	puts("\n")
+	
+	
+
+	if $x == '1'
+		last_day = get_days_in_month($today[1],$today[2])
+		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
+		$x = STDIN.getch
+	elsif $x.eql?"p"
+		
+		$today[1] = $today[1] - 1
+		if $today[1] <= 0
+			$today[1] = 12
+			$today[2] = $today[2] - 1
+		end
+		last_day = get_days_in_month($today[1],$today[2])
+		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
+		$x = STDIN.getch
+	elsif $x.eql?"n"
+		$today[1] = $today[1] + 1
+		if $today[1] >= 13
+			$today[1] = 1
+			$today[2] = $today[2] + 1
+		end
+		
+		last_day = get_days_in_month($today[1],$today[2])
+		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
+		$x = STDIN.getch
+	else
+
+		
+		$x = STDIN.getch
+
+
+	end
+
+end		
