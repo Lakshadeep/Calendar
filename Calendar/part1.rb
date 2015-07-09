@@ -10,8 +10,6 @@ def get_today_info
 	return [weekday,month,year]
 end
 
-#puts get_today_info
-
 
 def get_days_in_month(month,year) 
 	time = Date.new(year,month,-1)
@@ -27,8 +25,6 @@ def get_weekday(month,year,dayx)
 	return dayp
 end
 
-#puts get_days_in_month(2,2004)
-
 $weekdays = {
   0  => 'Mon',
   1  => 'Tue',
@@ -38,8 +34,6 @@ $weekdays = {
   5  => 'Sat',
   6  => 'Sun'
 }
-
-#puts weekdays[(1%7)]
 
 
 def create_calendar(month,year,day_format,last_day)
@@ -71,8 +65,7 @@ def headers_dispaly(weekday,start)
 end
 
 def display_calendar(x,weekday,start_day)
-	
-	#puts weekday.join(' ')
+
 	headers_dispaly(weekday,start_day)
 	
 	puts "\n"
@@ -84,8 +77,4 @@ def display_calendar(x,weekday,start_day)
 	end
 end
 
-display_calendar(create_calendar(7,2015,4,31),days7,4)
-
-#puts get_weekday(7,2015,1)
-
-#headers_dispaly(days7,2)
+display_calendar(create_calendar(7,2015,0,31),days7,0)
