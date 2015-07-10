@@ -152,7 +152,7 @@ end
 
 def display_calendar(x,weekday,start_day,month,year)
 	months = %w[Jan Feb Mar Apr May Jun Jul Aug Sept Oct Nov Dec]
-	puts(months[month-1] +"  "+ year.to_s)
+	puts("             "+months[month-1] +"  "+ year.to_s)
 	headers_dispaly(weekday,start_day)
 	
 	puts "\n"
@@ -182,6 +182,7 @@ while $x != 'q' do
 	puts("To go to next month press n\n")
 	puts("To go to previous month press p\n")
 	puts("To change start-day press w \n")
+	puts("To quit the program press q \n")
 	puts("\n")
 	
 	if $x == '1'
