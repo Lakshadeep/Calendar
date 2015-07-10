@@ -182,6 +182,9 @@ OptionParser.new do |opts|
   opts.on("-y", "--year", "Year") do |year|
     options[:year] = year
   end
+  opts.on("-w", "--day_specifier", "Day") do |day|
+    options[:day] = day
+  end
 end.parse!
 
 
@@ -192,7 +195,11 @@ else
 	year = ARGV[1].to_i
 	last_day = get_days_in_month(month,year)
 
-	day_form = 0
+	if options[:day] and !ARGV[2].nil?
+		day_form = ARGV[2].to_i
+	else
+		day_form = 0
+	end
 
 	x = create_calendar(month,year,day_form,last_day)
 
