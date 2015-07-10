@@ -7,12 +7,13 @@ Implemented features till now
    console and waits for user input.
    Pressing 'n' takes user to next month
    and pressing 'p' takes user to previous
-   month. \n
+   month. 
+
 2) Displays previous and next month dates
-   with '*' beside it \n
+   with '*' beside it.
 
 3) Provides user option to specify the day 
-   of week on which calendar should start. \n
+   of week on which calendar should start. 
 
-4) Displays holidays in the month with legends\n
+4) Displays holidays in the month with legends
 
