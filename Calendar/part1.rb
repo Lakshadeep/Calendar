@@ -3,6 +3,9 @@ require 'io/console'
 
 days7 = %w[sun mon tue wed thu fri sat]
 
+
+# REVIEW -- entire function is redundant. You already have access to a date
+# object which can give you month, year, wday using simple method calls.
 def get_today_info
 	time = Time.new
 	weekday = time.wday
@@ -37,8 +40,13 @@ $weekdays = {
 }
 
 
+# REVIEW -- function is redundant. Why are we "storing" the calendar in an
+# array only to print it without any further processing?
 def create_calendar(month,year,day_format,last_day)
+	# REVIEW -- why are both of these global variables?
 	$day = 1
+
+	# REVIEW -- why do you need to create an array to print the calendar?
 	$month_array = Array.new(7){Array.new(6)}
 	
 
@@ -92,9 +100,9 @@ while $x != 'q' do
 	puts("\n")
 	
 	
-
 	if $x == '1'
-		last_day = get_days_in_month($today[1],$today[2])
+		# REVIEW -- this can simply be outside the loop
+		last_day = get_days_in_month($today[1],$today[2]) # no_of_days = get_days_in_month(dt.month, dt.year)
 		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
 		$x = STDIN.getch
 	elsif $x.eql?"p"
@@ -104,6 +112,9 @@ while $x != 'q' do
 			$today[1] = 12
 			$today[2] = $today[2] - 1
 		end
+		# REVIEW -- this function should be called from within display_calendar
+		# itself, because there is no scenario in which someone can call
+		# display_calendar with a different value of last_day
 		last_day = get_days_in_month($today[1],$today[2])
 		display_calendar(create_calendar($today[1],$today[2],0,last_day),days7,0)
 		$x = STDIN.getch
