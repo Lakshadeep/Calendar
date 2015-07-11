@@ -60,6 +60,7 @@ $weekdays = {
 }
 
 
+# REVIEW -- very bad variable naming. day_format should be called starting_dow
 def create_calendar(month,year,day_format,last_day)
 	$day = 1
 	$month_array = Array.new(7){Array.new(6)}
@@ -75,6 +76,7 @@ def create_calendar(month,year,day_format,last_day)
 	next_month_count = 1
 	
 
+	# REVIEW -- entire logic needs to be simplified and re-implemented.
 	for i in 0..5
 		for j in 0..6
 			if $day <= last_day
