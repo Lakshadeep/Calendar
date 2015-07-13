@@ -1,6 +1,9 @@
 require 'date'
 require 'io/console'
 
+# REVIEW -- legend shuld NOT be part of the holiday list. It's not a concern
+# of the holiday list how it's going to be used. It's a problem of the
+# calendar program to solve.
 $holidays_list = [[Date.new(2015,1,1),"Happy New Year",""],
 				 [Date.new(2015,1,26),"Republic Day",""],
 				 [Date.new(2015,4,19),"My Birthday",""],	
@@ -21,6 +24,20 @@ def get_days_in_month(month,year)
     return no_of_days
 end
 
+def display_calendar_with_holidays(date, start_dow, last_month_lambda)
+	display_calendar(date, start_dow, lambda.new {|x,y|
+		# new logic 
+		# call last_month_labda
+	})
+
+end
+
+
+# REVIEW - Why are multiple hooks required here? You should be thinking about
+# the abstractions the following way: display_calendar encapsulates the idea
+# of printing a 6-week calendar. It provides hooks to print something
+# before/after each date. These hooks/lambdas are provided by the calling
+# statement.
 def create_calendar(date,start_day,last_month,holiday_list,holiday_info,holiday_legend)
 	day = 1
 	c_month = date.mon
