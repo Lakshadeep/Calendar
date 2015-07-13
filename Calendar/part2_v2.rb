@@ -7,6 +7,8 @@ def get_days_in_month(month,year)
     return no_of_days
 end
 
+# REVIEW -- this should probably be called 'display_calendar'. Should probably
+# be called 'start_dow' instead of 'start_day'
 def create_calendar(date,start_day,last_month)
 	day = 1
 	c_month = date.mon
@@ -46,12 +48,14 @@ last_month_info = lambda{|date,start_day|
 	lm = date << 1
 	l_month = lm.mon
 	l_year = lm.year
+	# REVIEW -- No point creating temporary variable for a single use. 
 	last_month_day = get_days_in_month(l_month,l_year)
 	last_month_count = (Date.new(date.year,date.mon,1)).wday - start_day
 	if last_month_count < 0
 		last_month_count = (7 + last_month_count)
 	else
-		returnlast_month_count = last_month_count
+		# REVIEW -- what's happening here?
+		return last_month_count = last_month_count
 	end
 	return (last_month_day - last_month_count + 1).to_s+"*"
 }
