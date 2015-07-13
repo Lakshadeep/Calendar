@@ -3,6 +3,8 @@ require 'date'
 require 'io/console'
 require 'optparse'
 
+# REVIEW -- graceful error handling
+
 $holidays_list = []
 CSV.foreach('holidays.csv') do |row|
   $holidays_list.push(row)
