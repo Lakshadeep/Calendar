@@ -7,7 +7,7 @@ def get_days_in_month(month,year)
   return no_of_days
 end
 
-def create_calendar(date,first_dow)
+def display_calendar(date,first_dow)
 	day = 1
 	c_month = date.mon
 	c_year = date.year
@@ -55,13 +55,13 @@ def create_calendar(date,first_dow)
 	
 end
 
-def headers_display(weekday,start)
-	puts("  #{weekday[start%7]}  #{weekday[(start+1)%7]}  #{weekday[(start+2)%7]}  #{weekday[(start+3)%7]}  #{weekday[(start+4)%7]}  #{weekday[(start+5)%7]}  #{weekday[(start+6)%7]}")
+def headers_display(weekday,start_dow)
+	puts("  #{weekday[start_dow%7]}  #{weekday[(start_dow+1)%7]}  #{weekday[(start_dow+2)%7]}  #{weekday[(start_dow+3)%7]}  #{weekday[(start_dow+4)%7]}  #{weekday[(start_dow+5)%7]}  #{weekday[(start_dow+6)%7]}")
 end
 
 #main program starts from here
 $x = '1'
-$day_form = 0
+$start_dow = 0
 $today = Date.today
 
 while $x != 'q' do
@@ -77,7 +77,7 @@ while $x != 'q' do
 		$today = $today >> 1
 	end
 	
-	create_calendar($today,$day_form)
+	display_calendar($today,$start_dow)
 	$x = STDIN.getch  
 	puts "\e[H\e[2J"
 end		
