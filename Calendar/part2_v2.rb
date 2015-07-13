@@ -8,31 +8,50 @@ def get_days_in_month(month,year)
 end
 
 # REVIEW -- this should probably be called 'display_calendar'. Should probably
-# be called 'start_dow' instead of 'start_day'
-def create_calendar(date,start_day,last_month)
+# be called 'start_dow' instead of 'start_day'                                   --fixed
+def display_calendar(date,first_dow,append_info)
 	day = 1
 	c_month = date.mon
 	c_year = date.year
-	months = %w[Jan Feb Mar Apr May Jun Jul Aug Sept Oct Nov Dec]
-	days7 = %w[ sun  mon  tue  wed  thu  fri  sat]
-	puts("             "+months[c_month-1] +"  "+ c_year.to_s)
-	headers_display(days7,start_day)
+	
+	# REVIEW -- You can get these names from the Date class itself    --fixed
+	m_temp = Date::ABBR_MONTHNAMES
+	months = m_temp[1,13]
+	days7 = Date::ABBR_DAYNAMES
+
+	# REVIEW -- use the #{} string interpolation instead of using + to
+	# concatenate. eg "My name is #{name}". Why haven't you used printf to align   --fixed
+	# output?
+	printf("%25s","#{ months[c_month-1]}, #{c_year.to_s}\n")
+	headers_display(days7,first_dow)
 	last_day = get_days_in_month(date.mon,date.year)
-	next_month_count = 1
+	start_day = 0 
+	
+	# REVIEW -- why is this condition being evaluated everytime inside the
+				# loop?                                                       --fixed
+	for i in 0..6
+		if ((i+first_dow)%7) == (Date.new(date.year,date.mon,day)).wday
+			start_day = i
+			break
+		end
+	end
 
 	for i in 0..5
 		for j in 0..6
-			if day <= last_day
-				if ((j+start_day)%7) == (Date.new(date.year,date.mon,day)).wday
-					printf("%5s",day.to_s)
-					day = day + 1
-				else
-					printf("%5s",last_month.call(date,start_day+j))				
-				end
+			# REVIEW -- try to prevent nested if conditions. Try converting them to
+			# if-elsif blocks                                                       --fixed
+
+			if day <= last_day and j >= start_day  and  i ==0
+				printf("%5s",day.to_s + append_info.call(Date.new(date.year,date.mon,day),first_dow,last_day,i,j,day))
+				day = day + 1
+			elsif day <= last_day and i!=0
+				printf("%5s",day.to_s + append_info.call(Date.new(date.year,date.mon,day),first_dow,last_day,i,j,day))
+				day = day + 1
+			elsif i == 0
+				printf("%5s","" + append_info.call(Date.new(date.year,date.mon,day),first_dow,last_day,i,j,day)) 
 			else
-				printf("%5s",next_month_count.to_s+"*")
-				next_month_count = next_month_count+1	
-				
+				printf("%5s","" + append_info.call(Date.new(date.year,date.mon,last_day),first_dow,last_day,i,j,day)) 
+				day = day + 1
 			end
 		end
 		puts()	
@@ -40,24 +59,32 @@ def create_calendar(date,start_day,last_month)
 	
 end
 
-def headers_display(weekday,start)
-	puts("  "+weekday[start%7]+ "  "+weekday[(start+1)%7]+ "  "+weekday[(start+2)%7]+ "  "+weekday[(start+3)%7]+ "  "+weekday[(start+4)%7]+ "  "+weekday[(start+5)%7]+ "  "+weekday[(start+6)%7])
+def headers_display(weekday,start_dow)
+	puts("  #{weekday[start_dow%7]}  #{weekday[(start_dow+1)%7]}  #{weekday[(start_dow+2)%7]}  #{weekday[(start_dow+3)%7]}  #{weekday[(start_dow+4)%7]}  #{weekday[(start_dow+5)%7]}  #{weekday[(start_dow+6)%7]}")
 end
 
-last_month_info = lambda{|date,start_day|
-	lm = date << 1
-	l_month = lm.mon
-	l_year = lm.year
-	# REVIEW -- No point creating temporary variable for a single use. 
-	last_month_day = get_days_in_month(l_month,l_year)
-	last_month_count = (Date.new(date.year,date.mon,1)).wday - start_day
-	if last_month_count < 0
-		last_month_count = (7 + last_month_count)
+
+append_info = lambda{|date,first_dow,last_day,i,j,next_month_offset|
+	if date.day == 1 and j != date.wday
+		lm = date << 1
+		first_dow = first_dow + j
+		# REVIEW -- No point creating temporary variable for a single use.   --fixed
+		last_month_nod = get_days_in_month(lm.mon,lm.year)
+		last_month_offset = (Date.new(date.year,date.mon,1)).wday - first_dow
+		if last_month_offset < 0
+			last_month_offset = (7 + last_month_offset)
+			return (last_month_offset - last_month_offset + 1).to_s+"*"
+		else
+			# REVIEW -- what's happening here?                              --fixed
+			return (last_month_nod - last_month_offset + 1).to_s+"*"
+		end
+	elsif next_month_offset > last_day and 
+		
+		return (next_month_offset - last_day ).to_s+"*"
+	
 	else
-		# REVIEW -- what's happening here?
-		return last_month_count = last_month_count
+		return " "
 	end
-	return (last_month_day - last_month_count + 1).to_s+"*"
 }
 
 #main program starts from here
@@ -78,7 +105,7 @@ while $x != 'q' do
 		$today = $today >> 1
 	end
 	
-	create_calendar($today,$day_form,last_month_info)
+	display_calendar($today,$day_form,append_info)
 	$x = STDIN.getch  
 	puts "\e[H\e[2J"
 end		
